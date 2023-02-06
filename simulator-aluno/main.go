@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	route2 "github.com/felipematheus1337/Imersao_FullStack_FullCycle/application/route"
+	"github.com/felipematheus1337/Imersao_FullStack_FullCycle/infra/kafka"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -15,6 +16,17 @@ func init() {
 }
 
 func main() {
+	msgChannel := make(chan *ckafka.Message)
+	consumer := kafka.NewKafkaConsumer(msgChan)
+	go consumer.Consume()
+
+	for msg := range msgChannel {
+		fmt.Println(string(msg.Value))
+	}
+
+	producer := kafka.NewKafkaProducer()
+	kafka.Publish("ola", "readtest", producer)
+
 	route := route2.Route{
 		ID:       "1",
 		ClientID: "1",
