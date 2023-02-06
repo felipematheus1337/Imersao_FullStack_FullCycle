@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	route2 "github.com/felipematheus1337/Imersao_FullStack_FullCycle/application/route"
+	kafka2 "github.com/felipematheus1337/Imersao_FullStack_FullCycle/application/kafka"
 	"github.com/felipematheus1337/Imersao_FullStack_FullCycle/infra/kafka"
 	"github.com/joho/godotenv"
 	"log"
@@ -22,18 +22,8 @@ func main() {
 
 	for msg := range msgChannel {
 		fmt.Println(string(msg.Value))
+		go kafka2.Produce(msg)
+
 	}
 
-	producer := kafka.NewKafkaProducer()
-	kafka.Publish("ola", "readtest", producer)
-
-	route := route2.Route{
-		ID:       "1",
-		ClientID: "1",
-	}
-
-	route.LoadPositions()
-	stringJson, _ := route.ExportJsonPositions()
-	lastIndex := len(stringJson) - 1
-	fmt.Println(stringJson[lastIndex])
 }
